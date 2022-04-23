@@ -13,7 +13,7 @@ const userController = {
   },
 
   // get user by id
-  // GET /api/user/:id
+  // GET /api/users/:id
   getUserById({ params }, res) {
     User.findOne({ _id: params.id })
       .then(dbUserData => res.json(dbUserData))
@@ -24,8 +24,6 @@ const userController = {
   },
 
   // create a User
-  // POST api/user
-
   // POST /api/users
     // expected body:
     // {

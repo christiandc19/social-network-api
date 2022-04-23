@@ -1,41 +1,22 @@
-const express = require('express');
 const mongoose = require('mongoose');
+const express = require('express');
 
 const app = express();
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT || 3000;
 
-const { Users, Thoughts } = require('./models');
-
-app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
-mongoose.connect(
-  process.env.MONGODB_URI || 'mongodb://localhost:3001/social-network-api',
-  {
+app.use(require('./routes'));
+
+
+// set up Mongoose to connect when we start the app. 18.1.5
+mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:/social-network-api', { // mongoose.connect() tells Mongoose which database we want to connect to.
     useNewUrlParser: true,
-    useUnifiedTopology: true,
-  }
-)
+    useUnifiedTopology: true
+});
 
 //Use this to log mongo queries being executed!
 mongoose.set('debug', true);
 
-
-app.get('/users', (req, res) => {
-    Note.find({})
-      .then(dbUsers => {
-        res.json(dbUsers);
-      })
-      .catch(err => {
-        res.json(err);
-      });
-  });
-
-
-
-
-
-app.listen(PORT, () => {
-    console.log(`🌍 App running on port ${PORT}!`);
-  });
-  
+app.listen(PORT, () => console.log(`🌍 Connected on localhost:${PORT}`));

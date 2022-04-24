@@ -23,12 +23,11 @@ const userController = {
       });
   },
 
-  // create a User
-  // POST /api/users
+  // ---------------------------------------------------------------------------- CREATE A USER ( POST /api/users ) ------------------------------------------------------------------------------------
     // expected body:
     // {
-    //     "username": "foo",
-    //     "email": "bar@baz.com"  // must follow the email format
+    //     "username": "name",
+    //     "email": "email@email.com"  // must follow the email format
     // }
 
   createUser({ body }, res) {
@@ -50,7 +49,8 @@ const userController = {
       .catch(err => res.status(400).json(err));
   },
 
-  // delete user
+    // ----------------------------------------------------------------------- DELETE A USER ( POST /api/users ) ------------------------------------------------------------------------------------
+  
   deleteUser({ params }, res) {
     User.findOneAndDelete({ _id: params.id })
       .then(dbUserData => {
@@ -61,7 +61,73 @@ const userController = {
         res.json(dbUserData);
       })
       .catch(err => res.status(400).json(err));
-  }
-};
+  },
+
+// --------------------------------------------------------------------------------- ADD A FRIEND ---------------------------------------------------------------------------------
+
+// POST /api/users/:userId/friends/:friendId
+addFriend({ params }, res) {
+  // add friendId to userId's friend list
+  User.findOneAndUpdate(
+      { _id: params.userId },
+      { $addToSet: { friends: params.friendId } },
+      { new: true, runValidators: true }
+  )
+  .then(dbUserData => {
+      if (!dbUserData) {
+          res.status(404).json({ message: 'No user found with this userId' });
+          return;
+      }
+      // add userId to friendId's friend list
+      User.findOneAndUpdate(
+          { _id: params.friendId },
+          { $addToSet: { friends: params.userId } },
+          { new: true, runValidators: true }
+      )
+      .then(dbUserData2 => {
+          if(!dbUserData2) {
+              res.status(404).json({ message: 'No user found with this friendId' })
+              return;
+          }
+          res.json(dbUserData);
+      })
+      .catch(err => res.json(err));
+  })
+  .catch(err => res.json(err));
+},
+
+// ---------------------------------------------------------------------------------DELETE A FRIEND ---------------------------------------------------------------------------------
+// DELETE /api/users/:userId/friends/:friendId
+deleteFriend({ params }, res) {
+  // remove friendId from userId's friend list
+  User.findOneAndUpdate(
+      { _id: params.userId },
+      { $pull: { friends: params.friendId } },
+      { new: true, runValidators: true }
+  )
+  .then(dbUserData => {
+      if (!dbUserData) {
+          res.status(404).json({ message: 'No user found with this userId' });
+          return;
+      }
+      // remove userId from friendId's friend list
+      User.findOneAndUpdate(
+          { _id: params.friendId },
+          { $pull: { friends: params.userId } },
+          { new: true, runValidators: true }
+      )
+      .then(dbUserData2 => {
+          if(!dbUserData2) {
+              res.status(404).json({ message: 'No user found with this friendId' })
+              return;
+          }
+          res.json({message: 'Successfully deleted the friend'});
+      })
+      .catch(err => res.json(err));
+  })
+  .catch(err => res.json(err));
+}
+}
+
 
 module.exports = userController;

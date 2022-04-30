@@ -34,7 +34,7 @@
 ### **REACTIONS**
 
 ### Add a reaction: PUT /api/thoughts/:id/reactions
-### Delete a reaction: DELETE /api/thoughts/:id/reactions
+### Delete a reaction: DELETE /api/thoughts/:id/reactions/:id
 
   ------------------
   ## INSTALLATION
@@ -52,7 +52,7 @@
   ## DEPLOYMENT  
   ### https://christiandc19.github.io/social-network-api/
   ### https://github.com/christiandc19/social-network-api/
-  ### Walkthrough video link:
+  ### Walkthrough video link: https://www.youtube.com/watch?v=9TQNe1Y5S7A
   ------------------
   ## QUESTIONS  
   ### If you have any questions, you may contact me at:

@@ -1,8 +1,9 @@
 const { User } = require('../models');
 
 const userController = {
-  // get all user
-  // GET /api/users
+
+  // ---------------------------------------------------------------------------- GET ALL USERS ( GET /api/users) ------------------------------------------------------------------------------------
+
   getAllUsers(req, res) {
     User.find({})
       .then(dbUserData => res.json(dbUserData))
@@ -12,8 +13,8 @@ const userController = {
       });
   },
 
-  // get user by id
-  // GET /api/users/:id
+  // ---------------------------------------------------------------------------- GET A USER ( GET /api/users/:id ) ------------------------------------------------------------------------------------
+
   getUserById({ params }, res) {
     User.findOne({ _id: params.id })
       .then(dbUserData => res.json(dbUserData))
@@ -27,7 +28,7 @@ const userController = {
     // expected body:
     // {
     //     "username": "name",
-    //     "email": "email@email.com"  // must follow the email format
+    //     "email": "email@email.com" 
     // }
 
   createUser({ body }, res) {
@@ -36,7 +37,7 @@ const userController = {
     .catch(err => res.status(400).json(err));
 },
 
-  // update user by id
+  // ---------------------------------------------------------------------------- UPDATE A USER ( POST /api/user/:id ) ------------------------------------------------------------------------------------
   updateUser({ params, body }, res) {
     User.findOneAndUpdate({ _id: params.id }, body, { new: true })
       .then(dbUserData => {
@@ -50,7 +51,6 @@ const userController = {
   },
 
     // ----------------------------------------------------------------------- DELETE A USER ( POST /api/users ) ------------------------------------------------------------------------------------
-  
   deleteUser({ params }, res) {
     User.findOneAndDelete({ _id: params.id })
       .then(dbUserData => {
